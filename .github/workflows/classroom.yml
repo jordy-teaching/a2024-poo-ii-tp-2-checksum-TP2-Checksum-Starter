@@ -18,52 +18,59 @@ jobs:
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Encodage sans erreur de "Batman"
-        setup-command: ''
+        setup-command: javac -d out src/com/cegepst/*.java
         command: java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
-          -classpath ./out/production/Checksum com.cegepst.App
-        input: |
-          encode
-          Batman
+          -classpath ./out/ com.cegepst.App
+        input: encode Batman
         expected-output: '010000100011000011011101000011011011011000011011011101001101010'
         comparison-method: contains
         timeout: 1
         max-score: 10
-    - name: Batman with script
-      id: batman-with-script
+    - name: Décodage sans erreur de "Batman"
+      id: decodage-sans-erreur-de-batman
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: Batman with script
-        setup-command: ''
-        command: "./run.sh"
-        input: |
-          encode
-          Batman
-        expected-output: '010000100011000011011101000011011011011000011011011101001101010'
+        test-name: Décodage sans erreur de "Batman"
+        setup-command: javac -d out src/com/cegepst/*.java
+        command: java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
+          -classpath ./out/ com.cegepst.App
+        input: decode 010000100011000011011101000011011011011000011011011101001101010
+        expected-output: Batman
         comparison-method: contains
         timeout: 1
         max-score: 10
-    - name: ls
-      id: ls
-      uses: classroom-resources/autograding-command-grader@v1
+    - name: Décodage avec 1 erreur de "Batman"
+      id: decodage-avec-1-erreur-de-batman
+      uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: ls
-        setup-command: ''
-        command: ls
-        timeout: 10
-    - name: pwd
-      id: pwd
-      uses: classroom-resources/autograding-command-grader@v1
+        test-name: Décodage avec 1 erreur de "Batman"
+        setup-command: javac -d out src/com/cegepst/*.java
+        command: java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
+          -classpath ./out/ com.cegepst.App
+        input: decode 010000100011000011011111000011011011011000011011011101001101010
+        expected-output: Batman
+        comparison-method: contains
+        timeout: 1
+        max-score: 10
+    - name: Décodage avec 2 erreurs de "Bonjour le monde"
+      id: decodage-avec-2-erreurs-de-bonjour-le-monde
+      uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: pwd
-        setup-command: ''
-        command: pwd
-        timeout: 10
+        test-name: Décodage avec 2 erreurs de "Bonjour le monde"
+        setup-command: javac -d out src/com/cegepst/*.java
+        command: java -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
+          -classpath ./out/ com.cegepst.App
+        input: decode 011000100011011110011011101011010100011011110011101011011100100001000001011000011011011000011001010001000001011011011011011110011011101011000001011001010010001000
+        expected-output: Bonjour le monde
+        comparison-method: contains
+        timeout: 1
+        max-score: 10
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
         ENCODAGE-SANS-ERREUR-DE-BATMAN_RESULTS: "${{steps.encodage-sans-erreur-de-batman.outputs.result}}"
-        BATMAN-WITH-SCRIPT_RESULTS: "${{steps.batman-with-script.outputs.result}}"
-        LS_RESULTS: "${{steps.ls.outputs.result}}"
-        PWD_RESULTS: "${{steps.pwd.outputs.result}}"
+        DECODAGE-SANS-ERREUR-DE-BATMAN_RESULTS: "${{steps.decodage-sans-erreur-de-batman.outputs.result}}"
+        DECODAGE-AVEC-1-ERREUR-DE-BATMAN_RESULTS: "${{steps.decodage-avec-1-erreur-de-batman.outputs.result}}"
+        DECODAGE-AVEC-2-ERREURS-DE-BONJOUR-LE-MONDE_RESULTS: "${{steps.decodage-avec-2-erreurs-de-bonjour-le-monde.outputs.result}}"
       with:
-        runners: encodage-sans-erreur-de-batman,batman-with-script,ls,pwd
+        runners: encodage-sans-erreur-de-batman,decodage-sans-erreur-de-batman,decodage-avec-1-erreur-de-batman,decodage-avec-2-erreurs-de-bonjour-le-monde
