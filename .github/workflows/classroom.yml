@@ -38,14 +38,32 @@ jobs:
         input: |
           encode
           Batman
-        expected-output: ''
+        expected-output: '010000100011000011011101000011011011011000011011011101001101010'
         comparison-method: contains
         timeout: 1
         max-score: 10
+    - name: ls
+      id: ls
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: ls
+        setup-command: ''
+        command: ls
+        timeout: 10
+    - name: pwd
+      id: pwd
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: pwd
+        setup-command: ''
+        command: pwd
+        timeout: 10
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
         ENCODAGE-SANS-ERREUR-DE-BATMAN_RESULTS: "${{steps.encodage-sans-erreur-de-batman.outputs.result}}"
         BATMAN-WITH-SCRIPT_RESULTS: "${{steps.batman-with-script.outputs.result}}"
+        LS_RESULTS: "${{steps.ls.outputs.result}}"
+        PWD_RESULTS: "${{steps.pwd.outputs.result}}"
       with:
-        runners: encodage-sans-erreur-de-batman,batman-with-script
+        runners: encodage-sans-erreur-de-batman,batman-with-script,ls,pwd
